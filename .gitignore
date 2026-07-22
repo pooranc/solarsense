@@ -1,0 +1,23 @@
+# ===== Backend (Java / Maven) =====
+backend/target/
+*.class
+*.jar
+*.war
+
+# ===== Frontend (Node / React) =====
+frontend/node_modules/
+frontend/dist/
+frontend/.env.local
+
+# ===== IDEs =====
+.idea/
+*.iml
+.vscode/
+*.suo
+*.user
+
+# ===== OS =====
+.DS_Store
+Thumbs.db
+
+# ===== Git line endings =====
