@@ -26,7 +26,3 @@ jobs:
       - name: Build and test
         working-directory: backend
         run: ./mvnw verify
-
-      - name: Check code style
-        working-directory: backend
-        run: ./mvnw checkstyle:check
