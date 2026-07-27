@@ -1,22 +1,15 @@
 package com.solarsense.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 import java.time.LocalDate;
 
+@Getter
+@AllArgsConstructor
 public class Property {
 
     private LocalDate gridConnectionDate;
     private boolean isNewBuild;
 
-    public Property(LocalDate gridConnectionDate, boolean isNewBuild) {
-        this.gridConnectionDate = gridConnectionDate;
-        this.isNewBuild = isNewBuild;
-    }
-
-    public LocalDate getGridConnectionDate() {
-        return gridConnectionDate;
-    }
-
-    public boolean isNewBuild() {
-        return isNewBuild;
-    }
 }
