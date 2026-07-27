@@ -1,7 +1,9 @@
 package com.solarsense.service;
 
 import com.solarsense.domain.Bill;
+import org.springframework.stereotype.Service;
 
+@Service
 public class BillCalculationService {
 
     public double annualDayUnitsKwh(Bill bill) {
