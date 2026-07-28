@@ -59,136 +59,117 @@ const [paybackResult, setPaybackResult] = useState(null)
 }
 
   return (
-    <div style={{ padding: '2rem', maxWidth: '600px', margin: '0 auto' }}>
-      <h1>SolarSense</h1>
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="max-w-2xl mx-auto px-4">
+        <h1 className="text-3xl font-bold text-green-700 mb-2">SolarSense</h1>
+        <p className="text-gray-500 mb-8">Solar PV & Battery Decision Support Tool</p>
 
-      <section>
-        <h2>Step 1 — Property Details</h2>
+        {/* Section 1 */}
+        <div className="bg-white rounded-xl shadow p-6 mb-6">
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">Step 1 — Property Details</h2>
 
-        <div>
-          <label>Grid Connection Date</label><br />
-          <input
-            type="date"
-            value={gridConnectionDate}
-            onChange={e => setGridConnectionDate(e.target.value)}
-          />
-        </div>
-
-        <div>
-          <label>
-            <input
-              type="checkbox"
-              checked={isNewBuild}
-              onChange={e => setIsNewBuild(e.target.checked)}
-            />
-            {' '}New build property
-          </label>
-        </div>
-
-        <button onClick={checkEligibility} disabled={!gridConnectionDate}>
-          Check Grant Eligibility
-        </button>
-
-        {eligibility !== null && (
-          <p>{eligibility ? 'Eligible for SEAI grant' : 'Not eligible for SEAI grant'}</p>
-        )}
-      </section>
-
-       <section>
-        <h2>Step 2 — Your Electricity Bill</h2>
-
-        <div>
-          <label>Day Rate (€/kWh)</label><br />
-          <input type="number" value={dayRate} onChange={e => setDayRate(e.target.value)} />
-        </div>
-
-        <div>
-          <label>Night Rate (€/kWh)</label><br />
-          <input type="number" value={nightRate} onChange={e => setNightRate(e.target.value)} />
-        </div>
-
-        <div>
-          <label>Peak Rate (€/kWh)</label><br />
-          <input type="number" value={peakRate} onChange={e => setPeakRate(e.target.value)} />
-        </div>
-
-        <div>
-          <label>Standing Charge (€/day)</label><br />
-          <input type="number" value={standingCharge} onChange={e => setStandingCharge(e.target.value)} />
-        </div>
-
-        <div>
-          <label>Day Units Used (kWh)</label><br />
-          <input type="number" value={dayUnits} onChange={e => setDayUnits(e.target.value)} />
-        </div>
-
-        <div>
-          <label>Night Units Used (kWh)</label><br />
-          <input type="number" value={nightUnits} onChange={e => setNightUnits(e.target.value)} />
-        </div>
-
-        <div>
-          <label>Peak Units Used (kWh)</label><br />
-          <input type="number" value={peakUnits} onChange={e => setPeakUnits(e.target.value)} />
-        </div>
-
-        <div>
-          <label>Bill Period (days)</label><br />
-          <input type="number" value={billPeriodDays} onChange={e => setBillPeriodDays(e.target.value)} />
-        </div>
-      </section>
-
-            <section>
-        <h2>Step 3 — Solar Quote</h2>
-
-        <div>
-          <label>Installer Name</label><br />
-          <input type="text" value={installerName} onChange={e => setInstallerName(e.target.value)} />
-        </div>
-
-        <div>
-          <label>System Size (kWp)</label><br />
-          <input type="number" value={systemSizeKwp} onChange={e => setSystemSizeKwp(e.target.value)} />
-        </div>
-
-        <div>
-          <label>Number of Panels</label><br />
-          <input type="number" value={numberOfPanels} onChange={e => setNumberOfPanels(e.target.value)} />
-        </div>
-
-        <div>
-          <label>Battery Capacity (kWh)</label><br />
-          <input type="number" value={batteryCapacityKwh} onChange={e => setBatteryCapacityKwh(e.target.value)} />
-        </div>
-
-        <div>
-          <label>Total Price (€)</label><br />
-           <input type="number" value={totalPrice} onChange={e => setTotalPrice(e.target.value)} />
-        </div>
-
-        <div>
-          <label>Grant Amount Claimed (€)</label><br />
-          <input type="number" value={grantAmountClaimed} onChange={e => setGrantAmountClaimed(e.target.value)} />
-        </div>
-      </section>
-
-          <section>
-        <h2>Step 4 — Calculate Payback</h2>
-
-        <button onClick={calculatePayback}>
-          Calculate Payback Period
-        </button>
-
-        {paybackResult !== null && (
-          <div>
-            <h3>Results for {installerName}</h3>
-            <p>Conservative (30% self-use): <strong>{paybackResult.conservativeYears.toFixed(1)} years</strong></p>
-            <p>Moderate (50% self-use): <strong>{paybackResult.moderateYears.toFixed(1)} years</strong></p>
-            <p>Optimistic (70% self-use): <strong>{paybackResult.optimisticYears.toFixed(1)} years</strong></p>
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-1">Grid Connection Date</label>
+            <input type="date" value={gridConnectionDate}
+              onChange={e => setGridConnectionDate(e.target.value)}
+              className="border border-gray-300 rounded-lg px-3 py-2 w-full" />
           </div>
-        )}
-      </section>
 
+          <div className="mb-4">
+            <label className="flex items-center gap-2 text-sm text-gray-700">
+              <input type="checkbox" checked={isNewBuild}
+                onChange={e => setIsNewBuild(e.target.checked)} />
+              New build property
+            </label>
+          </div>
+
+          <button onClick={checkEligibility} disabled={!gridConnectionDate}
+            className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 disabled:opacity-50">
+            Check Grant Eligibility
+          </button>
+
+          {eligibility !== null && (
+            <p className={`mt-4 font-medium ${eligibility ? 'text-green-600' : 'text-red-600'}`}>
+              {eligibility ? '✅ Eligible for SEAI grant (€2,400)' : '❌ Not eligible for SEAI grant'}
+            </p>
+          )}
+        </div>
+
+        {/* Section 2 */}
+        <div className="bg-white rounded-xl shadow p-6 mb-6">
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">Step 2 — Your Electricity Bill</h2>
+          <div className="grid grid-cols-2 gap-4">
+            {[
+              ['Day Rate (€/kWh)', dayRate, setDayRate],
+              ['Night Rate (€/kWh)', nightRate, setNightRate],
+              ['Peak Rate (€/kWh)', peakRate, setPeakRate],
+              ['Standing Charge (€/day)', standingCharge, setStandingCharge],
+              ['Day Units (kWh)', dayUnits, setDayUnits],
+              ['Night Units (kWh)', nightUnits, setNightUnits],
+              ['Peak Units (kWh)', peakUnits, setPeakUnits],
+              ['Bill Period (days)', billPeriodDays, setBillPeriodDays],
+            ].map(([label, value, setter]) => (
+              <div key={label}>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+                <input type="number" value={value} onChange={e => setter(e.target.value)}
+                  className="border border-gray-300 rounded-lg px-3 py-2 w-full" />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Section 3 */}
+        <div className="bg-white rounded-xl shadow p-6 mb-6">
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">Step 3 — Solar Quote</h2>
+          <div className="grid grid-cols-2 gap-4">
+            {[
+              ['Installer Name', installerName, setInstallerName, 'text'],
+              ['System Size (kWp)', systemSizeKwp, setSystemSizeKwp, 'number'],
+              ['Number of Panels', numberOfPanels, setNumberOfPanels, 'number'],
+              ['Battery Capacity (kWh)', batteryCapacityKwh, setBatteryCapacityKwh, 'number'],
+              ['Total Price (€)', totalPrice, setTotalPrice, 'number'],
+              ['Grant Claimed (€)', grantAmountClaimed, setGrantAmountClaimed, 'number'],
+            ].map(([label, value, setter, type]) => (
+              <div key={label}>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+                <input type={type} value={value} onChange={e => setter(e.target.value)}
+                  className="border border-gray-300 rounded-lg px-3 py-2 w-full" />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Section 4 */}
+        <div className="bg-white rounded-xl shadow p-6 mb-6">
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">Step 4 — Calculate Payback</h2>
+
+          <button onClick={calculatePayback}
+            className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700">
+            Calculate Payback Period
+          </button>
+
+          {paybackResult !== null && (
+            <div className="mt-6">
+              <h3 className="text-lg font-semibold text-gray-800 mb-3">Results for {installerName}</h3>
+              <div className="grid grid-cols-3 gap-4">
+                {[
+                  ['Conservative', '30% self-use', paybackResult.conservativeYears],
+                  ['Moderate', '50% self-use', paybackResult.moderateYears],
+                  ['Optimistic', '70% self-use', paybackResult.optimisticYears],
+                ].map(([label, sub, years]) => (
+                  <div key={label} className="bg-green-50 rounded-lg p-4 text-center">
+                    <p className="text-sm text-gray-500">{label}</p>
+                    <p className="text-xs text-gray-400">{sub}</p>
+                    <p className="text-2xl font-bold text-green-700 mt-1">{years.toFixed(1)}</p>
+                    <p className="text-sm text-gray-500">years</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+      </div>
     </div>
   )
 }
