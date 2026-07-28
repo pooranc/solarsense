@@ -24,6 +24,8 @@ const [grantAmountClaimed, setGrantAmountClaimed] = useState('2400')
 
 const [paybackResult, setPaybackResult] = useState(null)
 
+const [savedQuoteId, setSavedQuoteId] = useState(null)
+
 
 
   const checkEligibility = async () => {
@@ -59,6 +61,23 @@ const [paybackResult, setPaybackResult] = useState(null)
   })
   const data = await response.json()
   setPaybackResult(data)
+}
+
+const saveQuote = async () => {
+  const response = await fetch('http://localhost:8080/api/quotes', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      installerName,
+      systemSizeKwp: parseFloat(systemSizeKwp),
+      numberOfPanels: parseInt(numberOfPanels),
+      batteryCapacityKwh: parseFloat(batteryCapacityKwh),
+      totalPrice: parseFloat(totalPrice),
+      grantAmountClaimed: parseFloat(grantAmountClaimed)
+    })
+  })
+  const data = await response.json()
+  setSavedQuoteId(data.id)
 }
 
   return (
@@ -140,6 +159,15 @@ const [paybackResult, setPaybackResult] = useState(null)
               </div>
             ))}
           </div>
+           <div className="mt-4 flex items-center gap-4">
+          <button onClick={saveQuote}
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+            Save Quote
+          </button>
+          {savedQuoteId && (
+            <p className="text-green-600 text-sm font-medium">✅ Quote saved (ID: {savedQuoteId})</p>
+          )}
+        </div>
         </div>
 
         {/* Section 4 */}
