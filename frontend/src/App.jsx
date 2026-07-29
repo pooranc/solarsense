@@ -104,10 +104,13 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-2xl mx-auto px-4">
-        <h1 className="text-3xl font-bold text-green-700 mb-2">SolarSense</h1>
-        <p className="text-gray-500 mb-8">Solar PV & Battery Decision Support Tool</p>
+    <div className="min-h-screen bg-gray-50">
+      <header className="bg-white border-b border-gray-200 px-6 py-4 mb-6">
+        <h1 className="text-2xl font-bold text-green-700">SolarSense</h1>
+        <p className="text-sm text-gray-500">Irish solar PV payback calculator</p>
+      </header>
+
+      <main className="max-w-5xl mx-auto px-6">
 
         {/* Section 1 */}
         <GrantEligibilitySection
@@ -119,29 +122,32 @@ function App() {
           checkEligibility={checkEligibility}
         />
 
-        {/* Section 2 */}
-        <BillSection
-          dayRate={dayRate} setDayRate={setDayRate}
-          nightRate={nightRate} setNightRate={setNightRate}
-          peakRate={peakRate} setPeakRate={setPeakRate}
-          standingCharge={standingCharge} setStandingCharge={setStandingCharge}
-          dayUnits={dayUnits} setDayUnits={setDayUnits}
-          nightUnits={nightUnits} setNightUnits={setNightUnits}
-          peakUnits={peakUnits} setPeakUnits={setPeakUnits}
-          billPeriodDays={billPeriodDays} setBillPeriodDays={setBillPeriodDays}
-          saveBill={saveBill} savedBillId={savedBillId}
-        />
+        <div className="grid grid-cols-2 gap-6">
+          {/* Section 2 */}
+          <BillSection
+            dayRate={dayRate} setDayRate={setDayRate}
+            nightRate={nightRate} setNightRate={setNightRate}
+            peakRate={peakRate} setPeakRate={setPeakRate}
+            standingCharge={standingCharge} setStandingCharge={setStandingCharge}
+            dayUnits={dayUnits} setDayUnits={setDayUnits}
+            nightUnits={nightUnits} setNightUnits={setNightUnits}
+            peakUnits={peakUnits} setPeakUnits={setPeakUnits}
+            billPeriodDays={billPeriodDays} setBillPeriodDays={setBillPeriodDays}
+            saveBill={saveBill} savedBillId={savedBillId}
+          />
 
-        {/* Section 3 */}
-        <QuoteSection
-          installerName={installerName} setInstallerName={setInstallerName}
-          systemSizeKwp={systemSizeKwp} setSystemSizeKwp={setSystemSizeKwp}
-          numberOfPanels={numberOfPanels} setNumberOfPanels={setNumberOfPanels}
-          batteryCapacityKwh={batteryCapacityKwh} setBatteryCapacityKwh={setBatteryCapacityKwh}
-          totalPrice={totalPrice} setTotalPrice={setTotalPrice}
-          grantAmountClaimed={grantAmountClaimed} setGrantAmountClaimed={setGrantAmountClaimed}
-          saveQuote={saveQuote} savedQuoteId={savedQuoteId}
-        />
+          {/* Section 3 */}
+          <QuoteSection
+            installerName={installerName} setInstallerName={setInstallerName}
+            systemSizeKwp={systemSizeKwp} setSystemSizeKwp={setSystemSizeKwp}
+            numberOfPanels={numberOfPanels} setNumberOfPanels={setNumberOfPanels}
+            batteryCapacityKwh={batteryCapacityKwh} setBatteryCapacityKwh={setBatteryCapacityKwh}
+            totalPrice={totalPrice} setTotalPrice={setTotalPrice}
+            grantAmountClaimed={grantAmountClaimed} setGrantAmountClaimed={setGrantAmountClaimed}
+            saveQuote={saveQuote} savedQuoteId={savedQuoteId}
+          />
+
+        </div>
 
         {/* Section 4 */}
         <PaybackSection
@@ -150,8 +156,9 @@ function App() {
           installerName={installerName}
         />
 
-      </div>
+      </main>
     </div>
+
   )
 }
 

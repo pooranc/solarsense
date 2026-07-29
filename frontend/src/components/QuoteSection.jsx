@@ -3,8 +3,8 @@ function QuoteSection({ installerName, setInstallerName, systemSizeKwp, setSyste
   totalPrice, setTotalPrice, grantAmountClaimed, setGrantAmountClaimed,
   saveQuote, savedQuoteId }) {
   return (
-     <div className="bg-white rounded-xl shadow p-6 mb-6">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">Step 3 — Solar Quote</h2>
+     <div className="bg-white rounded-xl shadow p-4 mb-6">
+          <h2 className="text-xl font-semibold text-gray-800 mb-3">Step 3 — Solar Quote</h2>
           <div className="grid grid-cols-2 gap-4">
             {[
               ['Installer Name', installerName, setInstallerName, 'text'],
