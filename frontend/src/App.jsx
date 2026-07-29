@@ -23,8 +23,8 @@ const [totalPrice, setTotalPrice] = useState('15000')
 const [grantAmountClaimed, setGrantAmountClaimed] = useState('2400')
 
 const [paybackResult, setPaybackResult] = useState(null)
-
 const [savedQuoteId, setSavedQuoteId] = useState(null)
+const [savedBillId, setSavedBillId] = useState(null);
 
 
 
@@ -79,6 +79,25 @@ const saveQuote = async () => {
   const data = await response.json()
   setSavedQuoteId(data.id)
 }
+
+const saveBill = async () => {
+  const response = await fetch('http://localhost:8080/api/bills', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      dayRatePerKwh: parseFloat(dayRate),
+      nightRatePerKwh: parseFloat(nightRate),
+      peakRatePerKwh: parseFloat(peakRate),
+      standingChargePerDay: parseFloat(standingCharge),
+      dayUnitsKwh: parseFloat(dayUnits),
+      nightUnitsKwh: parseFloat(nightUnits),
+      peakUnitsKwh: parseFloat(peakUnits),
+      billPeriodDays: parseInt(billPeriodDays),
+    }),
+  });
+  const data = await response.json();
+  setSavedBillId(data.id);
+};
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
@@ -138,6 +157,15 @@ const saveQuote = async () => {
               </div>
             ))}
           </div>
+          <button
+  onClick={saveBill}
+  className="mt-4 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+>
+  Save Bill
+</button>
+{savedBillId && (
+  <p className="mt-2 text-green-700">✅ Bill saved (ID: {savedBillId})</p>
+)}
         </div>
 
         {/* Section 3 */}
