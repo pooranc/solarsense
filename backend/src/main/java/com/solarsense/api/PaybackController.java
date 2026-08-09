@@ -5,7 +5,6 @@ import com.solarsense.domain.Quote;
 import com.solarsense.service.PaybackCalculationService;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/api/payback")
 public class PaybackController {
