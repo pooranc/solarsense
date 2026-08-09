@@ -8,6 +8,7 @@ import (
 
       "github.com/pooranc/solarsense/handlers"
       "github.com/pooranc/solarsense/models"
+      "github.com/pooranc/solarsense/middleware"
 )
 
 func corsMiddleware(next http.HandlerFunc) http.HandlerFunc {
@@ -69,10 +70,13 @@ func main() {
       }))
       http.HandleFunc("/api/grant-eligibility/check", corsMiddleware(checkEligibility))
       http.HandleFunc("/api/payback/calculate", corsMiddleware(calculatePayback))
-      http.HandleFunc("/api/bills", corsMiddleware(handlers.SaveBill))
-      http.HandleFunc("/api/bills/all", corsMiddleware(handlers.GetBills))
-      http.HandleFunc("/api/quotes", corsMiddleware(handlers.SaveQuote))
-      http.HandleFunc("/api/quotes/all", corsMiddleware(handlers.GetQuotes))
+      http.HandleFunc("/api/bills", corsMiddleware(middleware.RequireAuth(handlers.SaveBill)))
+http.HandleFunc("/api/bills/all", corsMiddleware(middleware.RequireAuth(handlers.GetBills)))
+http.HandleFunc("/api/quotes", corsMiddleware(middleware.RequireAuth(handlers.SaveQuote)))
+http.HandleFunc("/api/quotes/all", corsMiddleware(middleware.RequireAuth(handlers.GetQuotes)))
+
+      http.HandleFunc("/api/register", corsMiddleware(handlers.Register))
+      http.HandleFunc("/api/login", corsMiddleware(handlers.Login))
 
       fmt.Println("Server starting on :8080")
       http.ListenAndServe(":8080", nil)

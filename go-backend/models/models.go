@@ -1,5 +1,7 @@
 package models
 
+var JwtSecret = []byte("solarsense-secret-key")
+
 type BillEntity struct {
       ID                   int     `json:"id"`
       DayRatePerKwh        float64 `json:"dayRatePerKwh"`
