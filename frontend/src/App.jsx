@@ -7,6 +7,7 @@ import GrantEligibilitySection from './components/GrantEligibilitySection';
 import BillSection from './components/BillSection';
 import QuoteSection from './components/QuoteSection';
 import PaybackSection from './components/PaybackSection';
+import SavedQuotesList from './components/SavedQuotesList';
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -164,6 +165,11 @@ function App() {
           />
 
           {/* Section 3 */}
+
+          <div className="bg-white rounded-xl shadow p-4 mb-6">
+  <h2 className="text-xl font-semibold text-gray-800 mb-4">Saved Quotes</h2>
+  <SavedQuotesList />
+</div>
           <QuoteSection
             installerName={installerName} setInstallerName={setInstallerName}
             systemSizeKwp={systemSizeKwp} setSystemSizeKwp={setSystemSizeKwp}
