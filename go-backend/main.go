@@ -143,16 +143,29 @@ func getQuotes(w http.ResponseWriter, r *http.Request) {
       json.NewEncoder(w).Encode(quotes)
 }
 
+func corsMiddleware(next http.HandlerFunc) http.HandlerFunc {
+      return func(w http.ResponseWriter, r *http.Request) {
+              w.Header().Set("Access-Control-Allow-Origin", "http://localhost:5173")
+              w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+              w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+              if r.Method == http.MethodOptions {
+                      w.WriteHeader(http.StatusOK)
+                      return
+              }
+              next(w, r)
+      }
+}
+
 func main() {
-      http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
-              fmt.Fprintln(w, "SolarSense Go backend running")
-      })
-      http.HandleFunc("/api/grant-eligibility/check", checkEligibility)
-	  http.HandleFunc("/api/payback/calculate", calculatePayback)
-	  http.HandleFunc("/api/bills", saveBill)
-	  http.HandleFunc("/api/bills/all", getBills)
-	  http.HandleFunc("/api/quotes", saveQuote)
-	  http.HandleFunc("/api/quotes/all", getQuotes)
+http.HandleFunc("/health", corsMiddleware(func(w http.ResponseWriter, r *http.Request) {
+    fmt.Fprintln(w, "SolarSense Go backend running")
+}))
+http.HandleFunc("/api/grant-eligibility/check", corsMiddleware(checkEligibility))
+http.HandleFunc("/api/payback/calculate", corsMiddleware(calculatePayback))
+http.HandleFunc("/api/bills", corsMiddleware(saveBill))
+http.HandleFunc("/api/bills/all", corsMiddleware(getBills))
+http.HandleFunc("/api/quotes", corsMiddleware(saveQuote))
+http.HandleFunc("/api/quotes/all", corsMiddleware(getQuotes))
 
       fmt.Println("Server starting on :8080")
       http.ListenAndServe(":8080", nil)
