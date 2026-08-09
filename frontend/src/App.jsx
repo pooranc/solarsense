@@ -1,5 +1,7 @@
 import { useState } from 'react'
 
+import API_BASE_URL from './config';
+
 import GrantEligibilitySection from './components/GrantEligibilitySection';
 import BillSection from './components/BillSection';
 import QuoteSection from './components/QuoteSection';
@@ -33,7 +35,7 @@ function App() {
 
 
   const checkEligibility = async () => {
-    const response = await fetch('http://localhost:8080/api/grant-eligibility/check', {
+    const response = await fetch(API_BASE_URL+'/api/grant-eligibility/check', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ gridConnectionDate, isNewBuild })
@@ -43,7 +45,7 @@ function App() {
   }
 
   const calculatePayback = async () => {
-    const response = await fetch('http://localhost:8080/api/payback/calculate', {
+    const response = await fetch(API_BASE_URL+'/api/payback/calculate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -68,7 +70,7 @@ function App() {
   }
 
   const saveQuote = async () => {
-    const response = await fetch('http://localhost:8080/api/quotes', {
+    const response = await fetch(API_BASE_URL+'/api/quotes', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -85,7 +87,7 @@ function App() {
   }
 
   const saveBill = async () => {
-    const response = await fetch('http://localhost:8080/api/bills', {
+    const response = await fetch(API_BASE_URL+'/api/bills', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
