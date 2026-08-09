@@ -2,12 +2,14 @@ import { useState } from 'react'
 
 import API_BASE_URL from './config';
 
+import LoginPage from './components/LoginPage';
 import GrantEligibilitySection from './components/GrantEligibilitySection';
 import BillSection from './components/BillSection';
 import QuoteSection from './components/QuoteSection';
 import PaybackSection from './components/PaybackSection';
 
 function App() {
+  const [currentUser, setCurrentUser] = useState(null);
   const [gridConnectionDate, setGridConnectionDate] = useState('2015-06-01')
   const [isNewBuild, setIsNewBuild] = useState(false)
   const [eligibility, setEligibility] = useState(null)
@@ -72,7 +74,9 @@ function App() {
   const saveQuote = async () => {
     const response = await fetch(API_BASE_URL+'/api/quotes', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + localStorage.getItem('token')
+       },
       body: JSON.stringify({
         installerName,
         systemSizeKwp: parseFloat(systemSizeKwp),
@@ -89,7 +93,9 @@ function App() {
   const saveBill = async () => {
     const response = await fetch(API_BASE_URL+'/api/bills', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + localStorage.getItem('token')
+       },
       body: JSON.stringify({
         dayRatePerKwh: parseFloat(dayRate),
         nightRatePerKwh: parseFloat(nightRate),
@@ -105,12 +111,31 @@ function App() {
     setSavedBillId(data.id);
   };
 
+      if(!currentUser){
+      return <LoginPage onLogin={setCurrentUser}/>
+    }
   return (
     <div className="min-h-screen bg-gray-50">
-      <header className="bg-white border-b border-gray-200 px-6 py-4 mb-6">
-        <h1 className="text-2xl font-bold text-green-700">SolarSense</h1>
-        <p className="text-sm text-gray-500">Irish solar PV payback calculator</p>
-      </header>
+<header className="bg-white border-b border-gray-200 px-6 py-4 mb-6">
+  <div className="flex justify-between items-center">
+    <div>
+      <h1 className="text-2xl font-bold text-green-700">SolarSense</h1>
+      <p className="text-sm text-gray-500">Irish solar PV payback calculator</p>
+    </div>
+    <div className="flex items-center gap-4">
+      <span className="text-sm text-gray-500">{currentUser.email}</span>
+      <button
+        onClick={() => {
+          localStorage.removeItem('token');
+          setCurrentUser(null);
+        }}
+        className="text-sm text-red-600 hover:underline"
+      >
+        Logout
+      </button>
+    </div>
+  </div>
+</header>
 
       <main className="max-w-5xl mx-auto px-6">
 
