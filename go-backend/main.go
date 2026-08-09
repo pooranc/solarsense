@@ -1,14 +1,47 @@
 package main
 
 import (
+      "database/sql"
       "encoding/json"
       "fmt"
       "net/http"
       "time"
+
+      _ "modernc.org/sqlite"
 )
 
-var bills []BillEntity
-var quotes []QuoteEntity
+
+var db *sql.DB
+
+func initDB() {
+    var err error
+    db, err = sql.Open("sqlite", "solarsense.db")
+    if err != nil {
+        panic(err)
+    }
+
+    db.Exec(`CREATE TABLE IF NOT EXISTS bills (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        day_rate REAL,
+        night_rate REAL,
+        peak_rate REAL,
+        standing_charge REAL,
+        day_units REAL,
+        night_units REAL,
+        peak_units REAL,
+        bill_period_days INTEGER
+    )`)
+
+     db.Exec(`CREATE TABLE IF NOT EXISTS quotes (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        installer_name TEXT,
+        system_size_kwp REAL,
+        number_of_panels INTEGER,
+        battery_capacity_kwh REAL,
+        total_price REAL,
+        grant_amount_claimed REAL
+    )`)
+}
 
 type PaybackRequest struct {
       InstallerName      string  `json:"installerName"`
@@ -103,8 +136,19 @@ func saveBill(w http.ResponseWriter, r *http.Request) {
       }
       var bill BillEntity
       json.NewDecoder(r.Body).Decode(&bill)
-      bill.ID = len(bills) + 1
-      bills = append(bills, bill)
+result, err := db.Exec(`INSERT INTO bills (day_rate, night_rate, peak_rate, standing_charge, day_units, night_units, peak_units, bill_period_days)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+    bill.DayRatePerKwh, bill.NightRatePerKwh, bill.PeakRatePerKwh,
+    bill.StandingChargePerDay, bill.DayUnitsKwh, bill.NightUnitsKwh,
+    bill.PeakUnitsKwh, bill.BillPeriodDays)
+if err != nil {
+    http.Error(w, err.Error(), http.StatusInternalServerError)
+    return
+}
+
+      id, _ := result.LastInsertId()
+      bill.ID = int(id)
+
       w.Header().Set("Content-Type", "application/json")
       json.NewEncoder(w).Encode(bill)
 }
@@ -115,6 +159,18 @@ func getBills(w http.ResponseWriter, r *http.Request) {
               http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
               return
       }
+      rows, _ := db.Query(`SELECT id, day_rate, night_rate, peak_rate, standing_charge, day_units, night_units, peak_units, bill_period_days FROM bills`)
+      defer rows.Close()
+
+      var bills []BillEntity
+      for rows.Next() {
+              var b BillEntity
+              rows.Scan(&b.ID, &b.DayRatePerKwh, &b.NightRatePerKwh, &b.PeakRatePerKwh,
+                      &b.StandingChargePerDay, &b.DayUnitsKwh, &b.NightUnitsKwh,
+                      &b.PeakUnitsKwh, &b.BillPeriodDays)
+              bills = append(bills, b)
+      }
+
       w.Header().Set("Content-Type", "application/json")
       json.NewEncoder(w).Encode(bills)
 }
@@ -128,8 +184,19 @@ func saveQuote(w http.ResponseWriter, r *http.Request) {
 
       var quote QuoteEntity
       json.NewDecoder(r.Body).Decode(&quote)
-      quote.ID = len(quotes) + 1
-      quotes = append(quotes, quote)
+      result, err := db.Exec(`INSERT INTO quotes (installer_name, system_size_kwp, number_of_panels, battery_capacity_kwh, total_price, grant_amount_claimed)
+              VALUES (?, ?, ?, ?, ?, ?)`,
+              quote.InstallerName, quote.SystemSizeKwp, quote.NumberOfPanels,
+              quote.BatteryCapacityKwh, quote.TotalPrice, quote.GrantAmountClaimed)
+
+      if err != nil {
+    http.Error(w, err.Error(), http.StatusInternalServerError)
+    return
+}
+
+      id, _ := result.LastInsertId()
+      quote.ID = int(id)
+
       w.Header().Set("Content-Type", "application/json")
       json.NewEncoder(w).Encode(quote)
 }
@@ -139,6 +206,17 @@ func getQuotes(w http.ResponseWriter, r *http.Request) {
               http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
               return
       }
+      rows, _ := db.Query(`SELECT id, installer_name, system_size_kwp, number_of_panels, battery_capacity_kwh, total_price, grant_amount_claimed FROM quotes`)
+      defer rows.Close()
+
+      var quotes []QuoteEntity
+      for rows.Next() {
+              var q QuoteEntity
+              rows.Scan(&q.ID, &q.InstallerName, &q.SystemSizeKwp, &q.NumberOfPanels,
+                      &q.BatteryCapacityKwh, &q.TotalPrice, &q.GrantAmountClaimed)
+              quotes = append(quotes, q)
+      }
+
       w.Header().Set("Content-Type", "application/json")
       json.NewEncoder(w).Encode(quotes)
 }
@@ -157,6 +235,7 @@ func corsMiddleware(next http.HandlerFunc) http.HandlerFunc {
 }
 
 func main() {
+      initDB()
 http.HandleFunc("/health", corsMiddleware(func(w http.ResponseWriter, r *http.Request) {
     fmt.Fprintln(w, "SolarSense Go backend running")
 }))
