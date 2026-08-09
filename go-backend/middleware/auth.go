@@ -5,9 +5,8 @@ import (
     "strings"
 
     "github.com/golang-jwt/jwt/v5"
+    "github.com/pooranc/solarsense/models"
 )
-
-var JwtSecret = []byte("solarsense-secret-key")
 
 func RequireAuth(next http.HandlerFunc) http.HandlerFunc {
       return func(w http.ResponseWriter, r *http.Request) {
@@ -19,7 +18,7 @@ func RequireAuth(next http.HandlerFunc) http.HandlerFunc {
 
               tokenString := strings.TrimPrefix(authHeader, "Bearer ")
               token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-                      return JwtSecret, nil
+                      return models.JwtSecret, nil
               })
 
               if err != nil || !token.Valid {
