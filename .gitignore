@@ -5,6 +5,7 @@ backend/target/
 *.war
 
 go-backend/*.exe
+go-backend/solarsense.db
 
 # ===== Frontend (Node / React) =====
 frontend/node_modules/
